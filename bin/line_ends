@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+class LineEnds
+  def initialize
+    self.endings = []
+  end
+
+  def each(&block)
+    endings.each &block
+  end
+
+  def next_char_is(char)
+    track char if should_track? char
+    self.previous_char = char
+  end
+
+  private
+
+  attr_accessor :previous_char, :endings
+
+  def should_track?(char)
+    char == "\n" || char == "\r"
+  end
+
+  # current possibilities are only \r\n and \n\r
+  def appending_would_make_a_line_end?(char)
+    # guards from trying ot make groups with 3 chars, guards from trying to append after a gap of non-ends
+    return unless previous_char == endings.last
+    previous_char == "\r" && char == "\n" ||
+    previous_char == "\n" && char == "\r"
+  end
+
+  def track(char)
+    if appending_would_make_a_line_end?(char)
+      endings[-1] += char
+    else
+      endings.push char
+    end
+  end
+end
+
+
+line_ends = LineEnds.new
+
+File.open ARGV.first do |file|
+  file.each_char { |char| line_ends.next_char_is char }
+end
+
+line_ends.each do |ending|
+  puts ending.gsub("\n", "\\n").gsub("\r", "\\r")
+end
