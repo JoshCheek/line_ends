@@ -45,48 +45,50 @@ describe 'line_ends binary' do
       expect_ends #none
     end
 
-    it 'outputs \n for a file with one line ending in \n' do
-      write_file "abc\n"
-      expect_ends '\n'
-    end
+    describe 'outputs each ending on its own line for a file with no empty lines' do
+      example '\n' do
+        write_file "abc\n"
+        expect_ends '\n'
+      end
 
-    it 'outputs \r\n for a file with one line ending in \r\n' do
-      write_file "abc\r\n"
-      expect_ends '\r\n'
-    end
+      it '\r\n' do
+        write_file "abc\r\n"
+        expect_ends '\r\n'
+      end
 
-    it 'outputs \n\r for a file with one line ending in \n\r' do
-      write_file "abc\n\r"
-      expect_ends '\n\r'
-    end
+      it '\n\r' do
+        write_file "abc\n\r"
+        expect_ends '\n\r'
+      end
 
-    it 'outputs \r for a file with one line ending in \r' do
-      write_file "abc\r"
-      expect_ends '\r'
-    end
+      it '\r' do
+        write_file "abc\r"
+        expect_ends '\r'
+      end
 
-    it 'outputs \n \r\n \n\r \n \r for a file with lines ending in \n \r\n \n \r' do
-      write_file "abc\ndef\r\nghi\n\rjkl\nmno\r"
-      expect_ends '\n', '\r\n', '\n\r', '\n', '\r'
+      it '\n \r\n \n\r \n \r' do
+        write_file "abc\ndef\r\nghi\n\rjkl\nmno\r"
+        expect_ends '\n', '\r\n', '\n\r', '\n', '\r'
+      end
     end
 
     context 'outputs each ending on its own line for a file with empty lines' do
-      example "\n" do
+      example '\n' do
         write_file "\n\n"
         expect_ends '\n', '\n'
       end
 
-      example "\r" do
+      example '\r' do
         write_file "\r\r"
         expect_ends '\r', '\r'
       end
 
-      example "\r\n" do
+      example '\r\n' do
         write_file "\r\n\r\n"
         expect_ends '\r\n', '\r\n'
       end
 
-      example "\n\r" do
+      example '\n\r' do
         write_file "\n\r\n\r"
         expect_ends '\n\r', '\n\r'
       end

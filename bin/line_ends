@@ -22,20 +22,22 @@ class LineEnds
     char == "\n" || char == "\r"
   end
 
-  # current possibilities are only \r\n and \n\r
-  def appending_would_make_a_line_end?(char)
-    # guards from trying ot make groups with 3 chars, guards from trying to append after a gap of non-ends
-    return unless previous_char == endings.last
-    previous_char == "\r" && char == "\n" ||
-    previous_char == "\n" && char == "\r"
-  end
-
   def track(char)
     if appending_would_make_a_line_end?(char)
       endings[-1] += char
     else
       endings.push char
     end
+  end
+
+  def appending_would_make_a_line_end?(char)
+    # guards from trying to append after a gap of non-ends
+    previous_char == endings.last && (
+      # guards from trying to make groups with 3 chars
+      # current possibilities are only \r\n and \n\r
+      previous_char == "\r" && char == "\n" ||
+      previous_char == "\n" && char == "\r"
+    )
   end
 end
 
